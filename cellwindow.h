@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <vector>
-//#include "cell.h"
+#include "cell.h"
 
 namespace Ui {
 class CellWindow;
