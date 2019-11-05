@@ -26,10 +26,12 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        cellwindow.cpp
+        cellwindow.cpp \
+    cell.cpp
 
 HEADERS += \
-        cellwindow.h
+        cellwindow.h \
+    cell.h
 
 FORMS += \
         cellwindow.ui
