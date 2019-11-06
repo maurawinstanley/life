@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <QtWidgets>
+#include <QColor>
 
 #include "cell.h"
 #include <string>
@@ -12,14 +13,6 @@
   @param x int x coordinate
   @param y int y coordinate
 */
-//Cell::Cell(std::string color){
-
-//}
-
-Cell::Cell(){
-    this->color_ = QColor(244,244,244);
-}
-
 
 Cell::Cell(QColor color, const int x, const int y) {
   this->color_ = color;
