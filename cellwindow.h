@@ -42,6 +42,8 @@ private:
    int population_;
 
    int turn_ct_;
+
+   std::vector<std::vector<Cell*>> cells_;
 };
 
 #endif // CELLWINDOW_H
