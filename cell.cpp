@@ -61,9 +61,11 @@ void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (alive_) {
         alive_ = false;
         color_ = QColor(255,20,147);
+        //TODO decrement population
     } else {
         alive_ = true;
         color_ = QColor(255,255,255);
+        //TODO increment population
     }
 
     // update this QGraphicsItem (force it to re-draw)

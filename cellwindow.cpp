@@ -3,6 +3,7 @@
 #include "ui_cellwindow.h"
 
 #include <vector>
+#include <string>
 #include <QColor>
 #include <QGraphicsItem>
 
@@ -34,6 +35,7 @@ CellWindow::CellWindow(QWidget *parent) :
             if (random > 5) {
                 color = QColor(255,20,147);
                 alive = true;
+                population_++;
             }
             Cell *c = new Cell(color, i*20, j*20, alive);
             scene->addItem(c);
@@ -43,6 +45,8 @@ CellWindow::CellWindow(QWidget *parent) :
         }
         cells_.push_back(row);
     }
+    std::string s = "Population:" + std::to_string(population_);
+    ui->populationLabel->setText(s.c_str());
 }
 
 CellWindow::~CellWindow()
