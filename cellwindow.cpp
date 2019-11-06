@@ -30,10 +30,12 @@ CellWindow::CellWindow(QWidget *parent) :
         for (int j = 0; j < 10; j++) {
             int random = rand() % 10 + 1;
             QColor color(255, 255, 255);
+            bool alive = false;
             if (random > 5) {
                 color = QColor(255,20,147);
+                alive = true;
             }
-            Cell *c = new Cell(color, i*20, j*20);
+            Cell *c = new Cell(color, i*20, j*20, alive);
             scene->addItem(c);
 
             // the two lines below this took me so long to figure out. i'm pissed. why is this the only way it works

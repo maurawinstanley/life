@@ -10,7 +10,7 @@ class Cell : public QObject, public QGraphicsItem {
 
 public:
     Cell();  // constructor
-    Cell(QColor color, const int x, const int y);
+    Cell(QColor color, const int x, const int y, bool alive);
 
 //    Cell& operator = (const Cell &c)
 //        {
@@ -49,7 +49,7 @@ private:
   int x_;
   int y_;
   QColor color_;
-  //bool alive_; // maybe, probably not
+  bool alive_;
 
 
   // all our Points will be 10 wide and tall (they are circles)

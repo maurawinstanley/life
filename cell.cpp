@@ -14,10 +14,11 @@
   @param y int y coordinate
 */
 
-Cell::Cell(QColor color, const int x, const int y) {
+Cell::Cell(QColor color, const int x, const int y, bool alive) {
   this->color_ = color;
   x_ = x;
   y_ = y;
+  alive_ = alive;
 }
 
 //Cell* Cell::Clone() {
@@ -44,7 +45,7 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 
     QBrush b = painter->brush();
-    painter->setBrush(QBrush(color_.dark(option->state & QStyle::State_Sunken ? 120 : 100)));
+    painter->setBrush(QBrush(color_));
 
     painter->drawRect(QRect(this->x_, this->y_, this->width_, this->width_));
     painter->setBrush(b);
@@ -54,18 +55,16 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 //in point.cpp
 void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    // Day 2, Task 3
-    qDebug() << x_;
-    qDebug() << y_;
-    qDebug() << "point clicked!";
+
     emit CellSelected(x_, y_);
 
-    // Day 2, Task 4
-    int red = rand() % 255;
-    int green = rand() % 255;
-    int blue = rand() % 255;
-    QColor c(red, green, blue);
-    color_ = c;
+    if (alive_) {
+        alive_ = false;
+        color_ = QColor(255,20,147);
+    } else {
+        alive_ = true;
+        color_ = QColor(255,255,255);
+    }
 
     // update this QGraphicsItem (force it to re-draw)
     update();
