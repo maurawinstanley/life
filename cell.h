@@ -12,6 +12,13 @@ public:
     Cell();  // constructor
     Cell(QColor color, const int x, const int y);
 
+//    Cell& operator = (const Cell &c)
+//        {
+//            return *this;
+//        }
+
+//    Cell * Clone();
+
     int get_x() const { return x_; }  // inline member function
     int get_y() const { return y_; }  // inline member function
 
@@ -25,6 +32,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
 
     static int get_width() { return width_; }
+
+
 
 // in point.h
 signals:

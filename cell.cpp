@@ -20,6 +20,11 @@ Cell::Cell(QColor color, const int x, const int y) {
   y_ = y;
 }
 
+//Cell* Cell::Clone() {
+//    Cell *c = new Cell(this->color_, this->x_, this->y_);
+//    return c;
+//}
+
 QRectF Cell::boundingRect() const
 {
     return QRectF(x_, y_, width_, width_);

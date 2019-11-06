@@ -25,9 +25,8 @@ CellWindow::CellWindow(QWidget *parent) :
 
     srand(time(0));
 
-    std::vector<std::vector<Cell>> cells;
-
     for (int i = 0; i < 20; i++) {
+        std::vector<Cell*> row;
         for (int j = 0; j < 10; j++) {
             int random = rand() % 10 + 1;
             QColor color(255, 255, 255);
@@ -36,8 +35,11 @@ CellWindow::CellWindow(QWidget *parent) :
             }
             Cell *c = new Cell(color, i*20, j*20);
             scene->addItem(c);
-            //cells[i][j] = c;
+
+            // the two lines below this took me so long to figure out. i'm pissed. why is this the only way it works
+            row.push_back(c);
         }
+        cells_.push_back(row);
     }
 }
 
