@@ -18,10 +18,10 @@ CellWindow::CellWindow(QWidget *parent) :
     // scene is a pointer field of plot window
     scene = new QGraphicsScene;
 
-    //time_ = new QTimer(this);
-    //speed_ = 1;
-    //connect(time_, SIGNAL(timeout()), this, SLOT(onPlayButtonClicked()));
-    //time_->start();
+    time_ = new QTimer(this);
+    speed_ = 1000; //start at 1000 ms intervals
+    connect(time_, SIGNAL(timeout()), this, SLOT(on_playButton_clicked()));
+
 
     // QGraphicsView is a container for a QGraphicsScene
     QGraphicsView * view = ui->graphicsView;
@@ -54,7 +54,9 @@ CellWindow::CellWindow(QWidget *parent) :
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
 
-    //connect(ui->stepButton, &QAbstractButton::pressed, this, &CellWindow::onPlayButtonClicked);
+    //connect(ui->stepButton, &QAbstractButton::pressed, this, &CellWindow::on_playButton_clicked);
+    //connect(ui->horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(setValue(int)));
+    //connect(ui->horizontalSlider, SIGNAL)
 }
 
 CellWindow::~CellWindow()
@@ -75,9 +77,14 @@ void CellWindow::on_stepButton_clicked(){
 
 void CellWindow::on_playButton_clicked(){
     qDebug()<<"play button clicked";
+    time_->start(speed_);
+    SimulateTurn();
+    scene->update();
+
 }
 void CellWindow::on_pauseButton_clicked(){
     qDebug()<<"pause button clicked";
+    time_->stop();
 }
 
 
@@ -180,3 +187,16 @@ int CellWindow::GetNeighbors(int row, int col) {
 
 }
 
+
+void CellWindow::on_horizontalSlider_actionTriggered(int action)
+{
+
+}
+
+void CellWindow::on_horizontalSlider_valueChanged(int value)
+{
+    speed_ = speed_/(value*.3);
+    scene->update();
+    qDebug()<<"in sliding";
+    qDebug()<<speed_;
+}
