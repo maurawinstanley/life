@@ -7,6 +7,7 @@
 #include <QColor>
 #include <QGraphicsItem>
 #include <QDebug>
+#include <QTimer>
 
 CellWindow::CellWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,7 +18,10 @@ CellWindow::CellWindow(QWidget *parent) :
     // scene is a pointer field of plot window
     scene = new QGraphicsScene;
 
-
+    //time_ = new QTimer(this);
+    //speed_ = 1;
+    //connect(time_, SIGNAL(timeout()), this, SLOT(onPlayButtonClicked()));
+    //time_->start();
 
     // QGraphicsView is a container for a QGraphicsScene
     QGraphicsView * view = ui->graphicsView;
@@ -49,6 +53,8 @@ CellWindow::CellWindow(QWidget *parent) :
 
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
+
+    //connect(ui->stepButton, &QAbstractButton::pressed, this, &CellWindow::onPlayButtonClicked);
 }
 
 CellWindow::~CellWindow()
@@ -61,6 +67,20 @@ void CellWindow::AddCell(Cell* c) {
     scene->addItem(c);
 }
 
+void CellWindow::on_stepButton_clicked(){
+    //SimulateTurn();
+    qDebug()<<"step button clicked";
+    SimulateTurn();
+}
+
+void CellWindow::on_playButton_clicked(){
+    qDebug()<<"play button clicked";
+}
+void CellWindow::on_pauseButton_clicked(){
+    qDebug()<<"pause button clicked";
+}
+
+
 void CellWindow::CellClickedSlot(Cell *c) {
     if (c->is_alive()) {
         population_++;
@@ -70,7 +90,7 @@ void CellWindow::CellClickedSlot(Cell *c) {
 
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
-    SimulateTurn();
+
 }
 
 
@@ -105,13 +125,13 @@ void CellWindow::SimulateTurn(){
     for (int i = 0; i < revive.size(); i++) {
         cells_[revive[i].first][revive[i].second]->set_color(QColor(255,0,147));
         cells_[revive[i].first][revive[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
-        scene->update();
+        //scene->update();
     }
 
     for (int i = 0; i < kill.size(); i++) {
         cells_[kill[i].first][kill[i].second]->set_color(QColor(255,255,255));
         cells_[kill[i].first][kill[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
-        scene->update();
+        //scene->update();
     }
     for (int row = 0; row<10; row++){
         for (int col = 0; col<20; col++){
@@ -127,7 +147,7 @@ void CellWindow::SimulateTurn(){
     scene->update();
 
 
-
+    //this will call a function update graph
 }
 
 
