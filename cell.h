@@ -35,6 +35,7 @@ public:
 
     static int get_width() { return width_; }
 
+    void flip_vivality();
 
 
 // in point.h

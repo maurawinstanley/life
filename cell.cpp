@@ -24,10 +24,14 @@ Cell::Cell(QColor color, const int x, const int y, bool alive) {
   alive_ = alive;
 }
 
-//Cell* Cell::Clone() {
-//    Cell *c = new Cell(this->color_, this->x_, this->y_);
-//    return c;
-//}
+void Cell::flip_vivality(){
+    if (alive_){
+        alive_ = false;
+    } else {
+        alive_ = true;
+    }
+
+}
 
 QRectF Cell::boundingRect() const
 {
@@ -64,11 +68,9 @@ void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (alive_) {
         alive_ = false;
         color_ = QColor(255,20,147);
-        //TODO decrement population
     } else {
         alive_ = true;
         color_ = QColor(255,255,255);
-        //TODO increment population
     }
 
     // update this QGraphicsItem (force it to re-draw)

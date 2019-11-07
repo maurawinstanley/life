@@ -62,7 +62,6 @@ void CellWindow::AddCell(Cell* c) {
 }
 
 void CellWindow::CellClickedSlot(Cell *c) {
-    qDebug() << "I'm here";
     if (c->is_alive()) {
         population_++;
     } else {
@@ -71,6 +70,7 @@ void CellWindow::CellClickedSlot(Cell *c) {
 
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
+    SimulateTurn();
 }
 
 //will call GetNeighbors and then create it will create
@@ -83,6 +83,7 @@ void CellWindow::SimulateTurn(){
     for (int i = 0; i<20; i++){
         for (int j = 0; j<10; j++){
             int alive_neighbors = GetNeighbors(i,j);
+            //qDebug()<< "alive neighbors: ";
             if (cells_[i][j]->is_alive()){ //alive
                 if (alive_neighbors<2){
                     std::pair <int, int> alive_to_dead;
@@ -105,9 +106,24 @@ void CellWindow::SimulateTurn(){
             }
         }
     }
-    population_ += dead_alive.size();
-    population_ -= alive_dead.size();
 
+
+    for (int i = 0; i < dead_alive.size(); i++) {
+        cells_[dead_alive[i].first][dead_alive[i].second]->set_color(QColor(255,255,255));
+        cells_[dead_alive[i].first][dead_alive[i].second]->flip_vivality();
+    }
+
+    for (int i = 0; i < alive_dead.size(); i++) {
+        cells_[alive_dead[i].first][alive_dead[i].second]->set_color(QColor(255,0,147));
+        cells_[alive_dead[i].first][alive_dead[i].second]->flip_vivality();
+    }
+
+    update();
+    qDebug() << "-----";
+    population_ += dead_alive.size();
+    qDebug() << dead_alive.size();
+    population_ -= alive_dead.size();
+    qDebug() << alive_dead.size();
 
 }
 
@@ -118,12 +134,15 @@ int CellWindow::GetNeighbors(int row, int col){ // will return the count of numb
     int neighbors_alive = 0;
 
     for (int i = 0; i<8; i++){
-        if (cells_[row + rows[i]][col + cols[i]]){
+        if (row+rows[i]>0 && (row+rows[i]<20) && (col +cols[i]>0) && (col + cols[i]<10)) {
             if (cells_[row + rows[i]][col + cols[i]]->is_alive()){
+                //qDebug() << "found alive neighbor";
                 neighbors_alive += 1;
             }
         }
     }
     return neighbors_alive;
 }
+
+
 
