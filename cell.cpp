@@ -8,6 +8,9 @@
 #include "cell.h"
 #include <string>
 
+
+
+
 /**
   Creates a new Cell object with coordinates x and y
   @param x int x coordinate
@@ -56,7 +59,7 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
-    emit CellSelected(x_, y_);
+    emit CellSelected(this);
 
     if (alive_) {
         alive_ = false;

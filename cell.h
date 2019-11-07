@@ -24,6 +24,8 @@ public:
 
     void set_color(QColor color) {color_ = color;}
 
+    bool is_alive() {return alive_;}
+
     double Distance(const Cell &other) const;  // member function
 
     QRectF boundingRect() const override;
@@ -38,7 +40,7 @@ public:
 // in point.h
 signals:
     // for distance
-    void CellSelected(int x, int y);
+    void CellSelected(Cell *c);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -51,6 +53,10 @@ private:
   QColor color_;
   bool alive_;
 
+
+
+  //static const QColor alive_color_ = QColor(255, 255, 255);
+  //static const QColor dead_color_ = QColor(255,20,147);
 
   // all our Points will be 10 wide and tall (they are circles)
   static const int width_ = 20;

@@ -32,7 +32,12 @@ public:
 
     int get_turn_ct(){ return turn_ct_; }
 
+    void AddCell(Cell *c);
+
      int grid_[20][10];
+
+private slots:
+     void CellClickedSlot(Cell *c);
 
 private:
     Ui::CellWindow *ui;
