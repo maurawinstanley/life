@@ -89,11 +89,19 @@ void CellWindow::on_pauseButton_clicked(){
 
 
 void CellWindow::CellClickedSlot(Cell *c) {
+
     if (c->is_alive()) {
-        population_++;
-    } else {
+        c->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
+        c->set_color(QColor(255,255,255));
         population_--;
+    } else {
+        c->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
+        c->set_color(QColor(255,20,147));
+        population_++;
     }
+
+
+    scene->update();
 
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
@@ -140,6 +148,7 @@ void CellWindow::SimulateTurn(){
         cells_[kill[i].first][kill[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
         //scene->update();
     }
+
     for (int row = 0; row<10; row++){
         for (int col = 0; col<20; col++){
             Cell* current = get_cell(row, col);

@@ -57,19 +57,9 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 //in point.cpp
 void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-
-    emit CellSelected(this);
-
-    if (alive_) {
-        alive_ = false;
-        color_ = QColor(255,20,147);
-    } else {
-        alive_ = true;
-        color_ = QColor(255,255,255);
-    }
-
     // update this QGraphicsItem (force it to re-draw)
-    update();
+    //update();
+    emit CellSelected(this);
 }
 
 
