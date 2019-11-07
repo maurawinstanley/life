@@ -76,7 +76,7 @@ void CellWindow::CellClickedSlot(Cell *c) {
 
 void CellWindow::SimulateTurn(){
     turn_ct_ += 1;
-
+    int accum = 0;
     std::vector<std::pair<int, int>> kill;
     std::vector<std::pair<int, int>> revive;
 
@@ -88,16 +88,19 @@ void CellWindow::SimulateTurn(){
             if (current->is_alive()) {
                 if (surrounding_population < 2 || surrounding_population > 3) {
                     kill.push_back({row,col});
+
                 }
             } else {
                 if (surrounding_population == 3) {
                     revive.push_back({row,col});
+
                 }
             }
         }
     }
 
-    population_ += (revive.size() - kill.size());
+    //population_ += (revive.size() - kill.size());
+    //population_ += accum;
 
     for (int i = 0; i < revive.size(); i++) {
         cells_[revive[i].first][revive[i].second]->set_color(QColor(255,0,147));
@@ -110,6 +113,21 @@ void CellWindow::SimulateTurn(){
         cells_[kill[i].first][kill[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
         scene->update();
     }
+    for (int row = 0; row<10; row++){
+        for (int col = 0; col<20; col++){
+            Cell* current = get_cell(row, col);
+            if (current->is_alive()){
+                accum ++;
+            }
+        }
+    }
+    population_ = accum;
+    qDebug()<< "pop: ";
+    qDebug() <<population_ ;
+    scene->update();
+
+
+
 }
 
 
