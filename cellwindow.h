@@ -34,7 +34,9 @@ public:
 
     void AddCell(Cell *c);
 
-     int grid_[20][10];
+    Cell* get_cell(int row, int col){ return cells_[row][col]; };
+
+    int grid_[20][10];
 
 private slots:
      void CellClickedSlot(Cell *c);
