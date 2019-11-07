@@ -7,7 +7,7 @@
 #include <QColor>
 #include <vector>
 #include "cell.h"
-
+#include <QSlider>
 namespace Ui {
 class CellWindow;
 }
@@ -49,7 +49,12 @@ private slots:
      void on_stepButton_clicked();
      void on_playButton_clicked();
      void on_pauseButton_clicked();
+     //void on_horizontalSlider_valueChanged();
+     //void setValue(int);
      //void PlotWindow::on_randomButton_clicked()
+
+     void on_horizontalSlider_actionTriggered(int action);
+     void on_horizontalSlider_valueChanged(int);
 
 private:
     Ui::CellWindow *ui;
@@ -59,7 +64,7 @@ private:
    int population_;
 
    int turn_ct_;
-   //QTimer * time_;
+   QTimer * time_;
    int speed_;
    std::vector<std::vector<Cell*>> cells_;
 };
