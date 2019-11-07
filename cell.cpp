@@ -25,12 +25,7 @@ Cell::Cell(QColor color, const int x, const int y, bool alive) {
 }
 
 void Cell::flip_vivality(){
-    if (alive_){
-        alive_ = false;
-    } else {
-        alive_ = true;
-    }
-
+    alive_ = !alive_;
 }
 
 QRectF Cell::boundingRect() const

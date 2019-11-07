@@ -26,10 +26,11 @@ CellWindow::CellWindow(QWidget *parent) :
 
 
     srand(time(0));
+    cells_ = {};
 
-    for (int i = 0; i < 20; i++) {
-        std::vector<Cell*> row;
-        for (int j = 0; j < 10; j++) {
+    for (int row = 0; row < 10; row++) {
+        std::vector<Cell*> cell_column = {};
+        for (int col = 0; col < 20; col++) {
             int random = rand() % 10 + 1;
             QColor color = QColor(255,255,255);
             bool alive = false;
@@ -38,15 +39,16 @@ CellWindow::CellWindow(QWidget *parent) :
                 alive = true;
                 population_++;
             }
-            Cell *c = new Cell(color, i*20, j*20, alive);
+            Cell *c = new Cell(color, col*20, row*20, alive);
 
             AddCell(c);
-
-            // the two lines below this took me so long to figure out. i'm pissed. why is this the only way it works
-            row.push_back(c);
+            cell_column.push_back(c);
         }
-        cells_.push_back(row);
+        //qDebug() << col[0]->is_alive() << ", " << col[1]->is_alive() << ", " << col[2]->is_alive() << ", " << col[3]->is_alive() << ", " << col[4]->is_alive() << ", " << col[5]->is_alive() << ", " << col[6]->is_alive() << ", " << col[7]->is_alive() << ", " << col[8]->is_alive() << ", " << col[9]->is_alive();
+        cells_.push_back(cell_column);
     }
+    //qDebug() << get_cell(0,19)->is_alive();
+
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
 }
@@ -73,76 +75,72 @@ void CellWindow::CellClickedSlot(Cell *c) {
     SimulateTurn();
 }
 
-//will call GetNeighbors and then create it will create
-//two vectors - one that keeps track of cells to flip from alive to dead
-// and one that keep track of cells to flip from dead to alive
+
 void CellWindow::SimulateTurn(){
-    this->turn_ct_ +=1;
-    std::vector<std::pair<int,int>> alive_dead;
-    std::vector<std::pair<int,int>> dead_alive;
-    for (int i = 0; i<20; i++){
-        for (int j = 0; j<10; j++){
-            int alive_neighbors = GetNeighbors(i,j);
-            //qDebug()<< "alive neighbors: ";
-            if (cells_[i][j]->is_alive()){ //alive
-                if (alive_neighbors<2){
-                    std::pair <int, int> alive_to_dead;
-                    alive_to_dead.first = i;
-                    alive_to_dead.second = j;
-                    alive_dead.push_back(alive_to_dead);
-                } else if (alive_neighbors>3){
-                    std::pair <int, int> alive_to_dead;
-                    alive_to_dead.first = i;
-                    alive_to_dead.second = j;
-                    alive_dead.push_back(alive_to_dead);
-                } //else: has 2 or three neighbors exactly and stays alive
-            } else { //dead
-                if (alive_neighbors == 3){
-                    std::pair <int, int> dead_to_alive;
-                    dead_to_alive.first = i;
-                    dead_to_alive.second = j;
-                    dead_alive.push_back(dead_to_alive);
+    turn_ct_ += 1;
+
+    std::vector<std::pair<int, int>> kill;
+    std::vector<std::pair<int, int>> revive;
+
+    for (int row = 0; row < 10; row++) {
+        for (int col = 0; col < 20; col++) {
+            int surrounding_population = GetNeighbors(row, col);
+            Cell* current = get_cell(row, col);
+
+            if (current->is_alive()) {
+                if (surrounding_population < 2 || surrounding_population > 3) {
+                    kill.push_back({row,col});
+                }
+            } else {
+                if (surrounding_population == 3) {
+                    revive.push_back({row,col});
                 }
             }
         }
     }
 
+    population_ += (revive.size() - kill.size());
 
-    for (int i = 0; i < dead_alive.size(); i++) {
-        cells_[dead_alive[i].first][dead_alive[i].second]->set_color(QColor(255,255,255));
-        cells_[dead_alive[i].first][dead_alive[i].second]->flip_vivality();
+    for (int i = 0; i < revive.size(); i++) {
+        cells_[revive[i].first][revive[i].second]->set_color(QColor(255,0,147));
+        cells_[revive[i].first][revive[i].second]->flip_vivality();
+        scene->update();
     }
 
-    for (int i = 0; i < alive_dead.size(); i++) {
-        cells_[alive_dead[i].first][alive_dead[i].second]->set_color(QColor(255,0,147));
-        cells_[alive_dead[i].first][alive_dead[i].second]->flip_vivality();
+    for (int i = 0; i < kill.size(); i++) {
+        cells_[kill[i].first][kill[i].second]->set_color(QColor(255,255,255));
+        cells_[kill[i].first][kill[i].second]->flip_vivality();
+        scene->update();
     }
-
-    update();
-    qDebug() << "-----";
-    population_ += dead_alive.size();
-    qDebug() << dead_alive.size();
-    population_ -= alive_dead.size();
-    qDebug() << alive_dead.size();
-
-}
-
-int CellWindow::GetNeighbors(int row, int col){ // will return the count of number alive neighbors
-    std::vector<int> rows = {-1, 0, 1, -1, 1, -1, 0, 1};
-    std::vector<int> cols = {-1, -1, -1, 0, 0, 1, 1, 1};
-
-    int neighbors_alive = 0;
-
-    for (int i = 0; i<8; i++){
-        if (row+rows[i]>0 && (row+rows[i]<20) && (col +cols[i]>0) && (col + cols[i]<10)) {
-            if (cells_[row + rows[i]][col + cols[i]]->is_alive()){
-                //qDebug() << "found alive neighbor";
-                neighbors_alive += 1;
-            }
-        }
-    }
-    return neighbors_alive;
 }
 
 
+int CellWindow::GetNeighbors(int row, int col) {
+
+    int neighbors = 0;
+
+    int row_above = row-1;
+    int row_below = row+1;
+    int col_before = col-1;
+    int col_after = col+1;
+
+    if (row - 1 < 0) {row_above = cells_.size()-1;}
+    if (row + 1 > 9) {row_below = 0;}
+    if (col - 1 < 0) {col_before = cells_[0].size()-1;}
+    if (col + 1 > 19) {col_after = 0;}
+
+    if (cells_[row_above][col_before]->is_alive()) {neighbors++;}
+    if (cells_[row_above][col]->is_alive()) {neighbors++;}
+    if (cells_[row_above][col_after]->is_alive()) {neighbors++;}
+
+    if (cells_[row][col_before]->is_alive()) {neighbors++;}
+    if (cells_[row][col_after]->is_alive()) {neighbors++;}
+
+    if (cells_[row_below][col_before]->is_alive()) {neighbors++;}
+    if (cells_[row_below][col]->is_alive()) {neighbors++;}
+    if (cells_[row_below][col_after]->is_alive()) {neighbors++;}
+
+    return neighbors;
+
+}
 

@@ -32,11 +32,9 @@ public:
 
     int get_turn_ct(){ return turn_ct_; }
 
-
+    Cell* get_cell(int row, int col) {return cells_[row][col];}
 
     void AddCell(Cell *c);
-
-    Cell* get_cell(int row, int col){ return cells_[row][col]; };
 
     int grid_[20][10];
 
