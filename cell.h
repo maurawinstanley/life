@@ -35,7 +35,7 @@ public:
 
     static int get_width() { return width_; }
 
-    void flip_vivality();
+    void now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
 
 
 // in point.h

@@ -28,9 +28,9 @@ CellWindow::CellWindow(QWidget *parent) :
     srand(time(0));
     cells_ = {};
 
-    for (int row = 0; row < 10; row++) {
+    for (int col = 0; col < 10; col++) {
         std::vector<Cell*> cell_column = {};
-        for (int col = 0; col < 20; col++) {
+        for (int row = 0; row < 20; row++) {
             int random = rand() % 10 + 1;
             QColor color = QColor(255,255,255);
             bool alive = false;
@@ -39,15 +39,13 @@ CellWindow::CellWindow(QWidget *parent) :
                 alive = true;
                 population_++;
             }
-            Cell *c = new Cell(color, col*20, row*20, alive);
+            Cell *c = new Cell(color, row*20, col*20, alive);
 
             AddCell(c);
             cell_column.push_back(c);
         }
-        //qDebug() << col[0]->is_alive() << ", " << col[1]->is_alive() << ", " << col[2]->is_alive() << ", " << col[3]->is_alive() << ", " << col[4]->is_alive() << ", " << col[5]->is_alive() << ", " << col[6]->is_alive() << ", " << col[7]->is_alive() << ", " << col[8]->is_alive() << ", " << col[9]->is_alive();
         cells_.push_back(cell_column);
     }
-    //qDebug() << get_cell(0,19)->is_alive();
 
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
@@ -103,13 +101,13 @@ void CellWindow::SimulateTurn(){
 
     for (int i = 0; i < revive.size(); i++) {
         cells_[revive[i].first][revive[i].second]->set_color(QColor(255,0,147));
-        cells_[revive[i].first][revive[i].second]->flip_vivality();
+        cells_[revive[i].first][revive[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
         scene->update();
     }
 
     for (int i = 0; i < kill.size(); i++) {
         cells_[kill[i].first][kill[i].second]->set_color(QColor(255,255,255));
-        cells_[kill[i].first][kill[i].second]->flip_vivality();
+        cells_[kill[i].first][kill[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
         scene->update();
     }
 }

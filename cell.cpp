@@ -24,7 +24,7 @@ Cell::Cell(QColor color, const int x, const int y, bool alive) {
   alive_ = alive;
 }
 
-void Cell::flip_vivality(){
+void Cell::now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down(){
     alive_ = !alive_;
 }
 
