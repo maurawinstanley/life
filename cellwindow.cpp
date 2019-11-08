@@ -15,6 +15,20 @@ CellWindow::CellWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->comboBox->addItem("0");
+    ui->comboBox->addItem("1");
+    ui->comboBox->addItem("2");
+    ui->comboBox->addItem("3");
+    ui->comboBox->addItem("4");
+    ui->comboBox->addItem("5");
+    ui->comboBox->addItem("6");
+    ui->comboBox->addItem("7");
+    ui->comboBox->addItem("8");
+    ui->comboBox->setCurrentIndex(3);
+
+    reproduction_requirement_ = 3;
+
+
     // scene is a pointer field of plot window
     scene = new QGraphicsScene;
 
@@ -126,7 +140,7 @@ void CellWindow::SimulateTurn(){
 
                 }
             } else {
-                if (surrounding_population == 3) {
+                if (surrounding_population == reproduction_requirement_) {
                     revive.push_back({row,col});
 
                 }
@@ -225,4 +239,9 @@ void CellWindow::on_randomizeColorButton_clicked()
             }
         }
     }
+}
+
+void CellWindow::on_comboBox_currentIndexChanged(int index)
+{
+    reproduction_requirement_ = index;
 }

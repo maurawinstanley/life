@@ -58,6 +58,8 @@ private slots:
 
      void on_randomizeColorButton_clicked();
 
+     void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::CellWindow *ui;
 
@@ -66,9 +68,14 @@ private:
    int population_;
 
    int turn_ct_;
+
    QTimer * time_;
+
    int speed_;
+
    std::vector<std::vector<Cell*>> cells_;
+
+   int reproduction_requirement_;
 };
 
 #endif // CELLWINDOW_H
