@@ -9,15 +9,13 @@
 #include <QDebug>
 #include <QTimer>
 
-#include <QtCharts/QBarSeries>
-#include <QtCharts/QBarSet>
-#include <QChart>
+
+
 #include <sstream>
 #include <sstream>
 #include <iomanip>
 
 
-#include <QtCharts/QChartView>
 /**
     Constructor: adds the options to change neighbor rate for cell to remain alive.
     Initializes scenes/views, connects timer to play button
