@@ -38,11 +38,7 @@ public:
     void AddCell(Cell *c);
 
     int grid_[20][10];
-    //onStartButtonClicked - will start the timer
-    //onStopButtonClicked - will sotp the timer
-    //onStepButtonClicked - will just call simulateturn
-    //slider func - will update the timer so make timer_*= 1000
-    //for graph will want to add a new scene
+
 
 private slots:
      void CellClickedSlot(Cell *c);

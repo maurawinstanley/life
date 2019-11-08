@@ -12,8 +12,20 @@
 #include <QtCharts/QBarSeries>
 #include <QtCharts/QBarSet>
 #include <QChart>
+#include <sstream>
+#include <sstream>
+#include <iomanip>
+
 
 #include <QtCharts/QChartView>
+/**
+    Constructor: adds the options to change neighbor rate for cell to remain alive.
+    Initializes scenes/views, connects timer to play button
+
+
+    @param parent is QWidget that cell window inherits from
+    @return nothing
+*/
 CellWindow::CellWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CellWindow)
@@ -47,12 +59,9 @@ CellWindow::CellWindow(QWidget *parent) :
     view2->setSceneRect(0,0,view2->frameSize().width(),view2->frameSize().height());
 
     srand(time(0));
-    //view2->show();
 
     NewGame();
-    //connect(ui->stepButton, &QAbstractButton::pressed, this, &CellWindow::on_playButton_clicked);
-    //connect(ui->horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(setValue(int)));
-    //connect(ui->horizontalSlider, SIGNAL)
+
     UpdateGraph();
 }
 
@@ -60,11 +69,16 @@ CellWindow::~CellWindow()
 {
     delete ui;
 }
+/**
+    Instantiates new game
+    Initializes the game board and randomizes dead/alive cells and sets initial population
 
+    @return void
+*/
 void CellWindow::NewGame() {
     reproduction_requirement_ = 3;
     ui->comboBox->setCurrentIndex(3);
-
+    population_ = 0;
     cells_ = {};
     Cell::set_alive_color(QColor(255,0,147));
     for (int col = 0; col < 10; col++) {
@@ -85,8 +99,14 @@ void CellWindow::NewGame() {
         }
         cells_.push_back(cell_column);
     }
-
-    std::string s = "Pop: " + std::to_string(population_) + "(" + std::to_string(population_/200) + ")";
+    double ratio =population_/200.0;
+    double rounded = (int)(ratio * 1000.0)/1000.0;
+    pops_.push_back(population_);
+    UpdateGraph();
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(3) << rounded;
+    std::string ratio_fixed = stream.str();
+    std::string s = "Pop: " + std::to_string(population_) + " (" + ratio_fixed + ")";
 
     ui->populationLabel->setText(s.c_str());
 
@@ -96,19 +116,30 @@ void CellWindow::NewGame() {
     scene->update();
 
 }
+/**
+    Adds a cell, connecting cell selected/clicked slot and signal
 
+    @param c is a pointer to the cell to be added
+    @return void
+*/
 void CellWindow::AddCell(Cell* c) {
     connect(c, &Cell::CellSelected, this, &CellWindow::CellClickedSlot);
     scene->addItem(c);
 
 }
-
+/**
+    Slot to trigger a new turn when the step button has been clicked
+    @return void
+*/
 void CellWindow::on_stepButton_clicked(){
 
     //qDebug()<<"step button clicked";
     SimulateTurn();
 }
-
+/**
+    Slot to trigger a turn and to start the timer
+    @return void
+*/
 void CellWindow::on_playButton_clicked(){
     //Debug()<<"play button clicked";
     time_->start(speed_);
@@ -116,12 +147,22 @@ void CellWindow::on_playButton_clicked(){
     scene->update();
 
 }
+/**
+    Slot to trigger stop timer when the pause button has been clicked
+    @return void
+*/
 void CellWindow::on_pauseButton_clicked(){
     //qDebug()<<"pause button clicked";
     time_->stop();
 }
 
+/**
+    Slot to deal with a cell being selected
+    Revives/kills cell potentially and updates population and ui
+    @param c is the cell with which to handle reviving or killing cell and responding accordingly
 
+    @return void
+*/
 void CellWindow::CellClickedSlot(Cell *c) {
 
     if (c->is_alive()) {
@@ -137,11 +178,24 @@ void CellWindow::CellClickedSlot(Cell *c) {
 
     scene->update();
 
-    std::string s = "Pop: " + std::to_string(population_)+ "(" + std::to_string(population_/200) + ")";
+    double ratio =population_/200.0;
+    double rounded = (int)(ratio * 1000.0)/1000.0;
+
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(3) << rounded;
+    std::string ratio_fixed = stream.str();
+    std::string s = "Pop: " + std::to_string(population_) + " (" + ratio_fixed + ")";
+
+
     ui->populationLabel->setText(s.c_str());
 
 }
-
+/**
+    Takes a turn in the game.
+    Iterates through and gets neighbors and based on the neighbor count it adds the cell to a vector based on if it is revived or killed
+    Updates population and ui
+    @return void
+*/
 
 void CellWindow::SimulateTurn(){
     turn_ct_ += 1;
@@ -168,9 +222,6 @@ void CellWindow::SimulateTurn(){
         }
     }
 
-    //population_ += (revive.size() - kill.size());
-    //population_ += accum;
-
     for (int i = 0; i < revive.size(); i++) {
         cells_[revive[i].first][revive[i].second]->set_color(Cell::get_alive_color());
         cells_[revive[i].first][revive[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
@@ -196,13 +247,14 @@ void CellWindow::SimulateTurn(){
         pops_.erase(pops_.begin());
     }
     pops_.push_back(population_);
-    qDebug()<< "pop: ";
-    qDebug() <<population_ ;
     double ratio =population_/200.0;
     double rounded = (int)(ratio * 1000.0)/1000.0;
-    qDebug()<<"ratio";
-    qDebug()<<rounded;
-    std::string s = "Pop: " + std::to_string(population_)+ "(" + std::to_string(rounded) + ")";
+
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(3) << rounded;
+    std::string ratio_fixed = stream.str();
+    std::string s = "Pop: " + std::to_string(population_) + " (" + ratio_fixed + ")";
+
     ui->populationLabel->setText(s.c_str());
 
     std::string turn = "Turn: " + std::to_string(turn_ct_);
@@ -215,19 +267,27 @@ void CellWindow::SimulateTurn(){
 
     //this will call a function update graph
 }
+/**
+    Graphing function that creates rect items based on the population vector
+    @return void
+*/
 void CellWindow::UpdateGraph(){
     graph_scene->clear();
     for (int i = 0; i<pops_.size(); i++){
         //qDebug()<<"pop size: ";
         //qDebug()<<pops_[i];
-        QGraphicsRectItem* item3 = new QGraphicsRectItem((i+1)*10,85,10,-pops_[i]);
+        QGraphicsRectItem* item3 = new QGraphicsRectItem((i+1)*10,85,10,-pops_[i]*.5);
         graph_scene->addItem(item3);
     }
     graph_scene->update();
     view2->update();
 
 }
-
+/**
+    Function to get the count of neighbors of the cell accomodating for wrapping from top to bottom and left to right
+    @param int, @param col are the row/cols of the cell to check neighbors
+    @return number of neighbors
+*/
 int CellWindow::GetNeighbors(int row, int col) {
 
     int neighbors = 0;
@@ -262,7 +322,10 @@ void CellWindow::on_horizontalSlider_actionTriggered(int action)
 {
 
 }
-
+/**
+    Slot to change the speed based on the slider
+    @return void
+*/
 void CellWindow::on_horizontalSlider_valueChanged(int value)
 {
     speed_ = 1000-(value*4);
@@ -274,7 +337,10 @@ void CellWindow::on_horizontalSlider_valueChanged(int value)
     qDebug()<<"in sliding";
     qDebug()<<speed_;
 } //slider goes from 1-100
-
+/**
+    Slot to randomize color
+    @return void
+*/
 void CellWindow::on_randomizeColorButton_clicked()
 {
     int r = rand() % 255;
@@ -293,12 +359,18 @@ void CellWindow::on_randomizeColorButton_clicked()
         }
     }
 }
-
+/**
+    Slot to chnage the reproduction requirement
+    @return void
+*/
 void CellWindow::on_comboBox_currentIndexChanged(int index)
 {
     reproduction_requirement_ = index;
 }
-
+/**
+    Slot to reset game
+    @return void
+*/
 void CellWindow::on_resetButton_clicked()
 {
    NewGame();
