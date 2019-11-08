@@ -11,7 +11,8 @@
 namespace Ui {
 class CellWindow;
 }
-
+//del comment
+//del comment 2
 class CellWindow : public QMainWindow
 {
     Q_OBJECT
