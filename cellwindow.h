@@ -11,6 +11,7 @@
 namespace Ui {
 class CellWindow;
 }
+//del comment
 
 class CellWindow : public QMainWindow
 {
