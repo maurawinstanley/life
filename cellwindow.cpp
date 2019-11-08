@@ -24,10 +24,6 @@ CellWindow::CellWindow(QWidget *parent) :
     ui->comboBox->addItem("6");
     ui->comboBox->addItem("7");
     ui->comboBox->addItem("8");
-    ui->comboBox->setCurrentIndex(3);
-
-    reproduction_requirement_ = 3;
-
 
     // scene is a pointer field of plot window
     scene = new QGraphicsScene;
@@ -44,8 +40,24 @@ CellWindow::CellWindow(QWidget *parent) :
 
 
     srand(time(0));
-    cells_ = {};
 
+    NewGame();
+    //connect(ui->stepButton, &QAbstractButton::pressed, this, &CellWindow::on_playButton_clicked);
+    //connect(ui->horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(setValue(int)));
+    //connect(ui->horizontalSlider, SIGNAL)
+}
+
+CellWindow::~CellWindow()
+{
+    delete ui;
+}
+
+void CellWindow::NewGame() {
+    reproduction_requirement_ = 3;
+    ui->comboBox->setCurrentIndex(3);
+
+    cells_ = {};
+    Cell::set_alive_color(QColor(255,0,147));
     for (int col = 0; col < 10; col++) {
         std::vector<Cell*> cell_column = {};
         for (int row = 0; row < 20; row++) {
@@ -68,14 +80,6 @@ CellWindow::CellWindow(QWidget *parent) :
     std::string s = "Population: " + std::to_string(population_);
     ui->populationLabel->setText(s.c_str());
 
-    //connect(ui->stepButton, &QAbstractButton::pressed, this, &CellWindow::on_playButton_clicked);
-    //connect(ui->horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(setValue(int)));
-    //connect(ui->horizontalSlider, SIGNAL)
-}
-
-CellWindow::~CellWindow()
-{
-    delete ui;
 }
 
 void CellWindow::AddCell(Cell* c) {
@@ -246,4 +250,9 @@ void CellWindow::on_randomizeColorButton_clicked()
 void CellWindow::on_comboBox_currentIndexChanged(int index)
 {
     reproduction_requirement_ = index;
+}
+
+void CellWindow::on_resetButton_clicked()
+{
+   NewGame();
 }
