@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>438</width>
+    <width>422</width>
     <height>505</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>221</width>
+      <width>111</width>
       <height>42</height>
      </rect>
     </property>
@@ -56,7 +56,7 @@
       <x>10</x>
       <y>390</y>
       <width>191</width>
-      <height>31</height>
+      <height>32</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -129,13 +129,26 @@
      <string>Speed:</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="randomizeColorButton">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>20</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Randomize Color</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>438</width>
+     <width>422</width>
      <height>22</height>
     </rect>
    </property>

@@ -209,3 +209,20 @@ void CellWindow::on_horizontalSlider_valueChanged(int value)
     qDebug()<<"in sliding";
     qDebug()<<speed_;
 }
+
+void CellWindow::on_randomizeColorButton_clicked()
+{
+    int r = rand() % 255;
+    int g = rand() % 255;
+    int b = rand() % 255;
+    for (int row = 0; row < 10; row++) {
+        for (int col = 0; col < 20; col++) {
+            Cell *c = get_cell(row, col);
+
+            if (c->is_alive()) {
+                c->set_color(QColor(r, g, b));
+                scene->update();
+            }
+        }
+    }
+}

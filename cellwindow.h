@@ -56,6 +56,8 @@ private slots:
      void on_horizontalSlider_actionTriggered(int action);
      void on_horizontalSlider_valueChanged(int);
 
+     void on_randomizeColorButton_clicked();
+
 private:
     Ui::CellWindow *ui;
 
