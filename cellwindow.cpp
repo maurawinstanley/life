@@ -9,19 +9,12 @@
 #include <QDebug>
 #include <QTimer>
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 81949994a77378221a44eb12af931d36ff1d4758
 #include <sstream>
 #include <sstream>
 #include <iomanip>
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 81949994a77378221a44eb12af931d36ff1d4758
 /**
     Constructor: adds the options to change neighbor rate for cell to remain alive.
     Initializes scenes/views, connects timer to play button
