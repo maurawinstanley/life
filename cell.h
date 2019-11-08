@@ -12,12 +12,12 @@ public:
     Cell();  // constructor
     Cell(QColor color, const int x, const int y, bool alive);
 
-//    Cell& operator = (const Cell &c)
-//        {
-//            return *this;
-//        }
+    static void set_alive_color(QColor color) {alive_color_ = color;}
 
-//    Cell * Clone();
+    static QColor get_alive_color() {return alive_color_;}
+
+    static QColor get_dead_color() {return dead_color_;}
+
 
     int get_x() const { return x_; }  // inline member function
     int get_y() const { return y_; }  // inline member function
@@ -52,9 +52,17 @@ protected:
 
 private:
   int x_;
+
   int y_;
+
   QColor color_;
+
   bool alive_;
+
+  static QColor alive_color_;
+
+  static QColor dead_color_;
+
 
 
 

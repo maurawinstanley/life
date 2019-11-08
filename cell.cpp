@@ -8,7 +8,8 @@
 #include "cell.h"
 #include <string>
 
-
+QColor Cell::alive_color_ = QColor(255,20,147);
+QColor Cell::dead_color_ = QColor(255, 255, 255);
 
 
 /**

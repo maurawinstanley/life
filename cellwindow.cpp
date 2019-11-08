@@ -50,10 +50,10 @@ CellWindow::CellWindow(QWidget *parent) :
         std::vector<Cell*> cell_column = {};
         for (int row = 0; row < 20; row++) {
             int random = rand() % 10 + 1;
-            QColor color = QColor(255,255,255);
+            QColor color = Cell::get_dead_color();
             bool alive = false;
             if (random > 5) {
-                color = QColor(255,20,147);
+                color = Cell::get_alive_color();
                 alive = true;
                 population_++;
             }
@@ -106,11 +106,11 @@ void CellWindow::CellClickedSlot(Cell *c) {
 
     if (c->is_alive()) {
         c->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
-        c->set_color(QColor(255,255,255));
+        c->set_color(Cell::get_dead_color());
         population_--;
     } else {
         c->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
-        c->set_color(QColor(255,20,147));
+        c->set_color(Cell::get_alive_color());
         population_++;
     }
 
@@ -152,13 +152,13 @@ void CellWindow::SimulateTurn(){
     //population_ += accum;
 
     for (int i = 0; i < revive.size(); i++) {
-        cells_[revive[i].first][revive[i].second]->set_color(QColor(255,0,147));
+        cells_[revive[i].first][revive[i].second]->set_color(Cell::get_alive_color());
         cells_[revive[i].first][revive[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
         //scene->update();
     }
 
     for (int i = 0; i < kill.size(); i++) {
-        cells_[kill[i].first][kill[i].second]->set_color(QColor(255,255,255));
+        cells_[kill[i].first][kill[i].second]->set_color(Cell::get_dead_color());
         cells_[kill[i].first][kill[i].second]->now_this_is_the_story_all_about_how_my_life_got_flipped_turned_upside_down();
         //scene->update();
     }
@@ -229,12 +229,14 @@ void CellWindow::on_randomizeColorButton_clicked()
     int r = rand() % 255;
     int g = rand() % 255;
     int b = rand() % 255;
+
+    Cell::set_alive_color(QColor(r, g, b));
     for (int row = 0; row < 10; row++) {
         for (int col = 0; col < 20; col++) {
             Cell *c = get_cell(row, col);
 
             if (c->is_alive()) {
-                c->set_color(QColor(r, g, b));
+                c->set_color(Cell::get_alive_color());
                 scene->update();
             }
         }
