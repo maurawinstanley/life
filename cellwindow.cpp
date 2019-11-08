@@ -9,6 +9,11 @@
 #include <QDebug>
 #include <QTimer>
 
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarSet>
+#include <QChart>
+
+#include <QtCharts/QChartView>
 CellWindow::CellWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CellWindow)
@@ -27,7 +32,7 @@ CellWindow::CellWindow(QWidget *parent) :
 
     // scene is a pointer field of plot window
     scene = new QGraphicsScene;
-
+    graph_scene = new QGraphicsScene;
     time_ = new QTimer(this);
     speed_ = 1000; //start at 1000 ms intervals
     connect(time_, SIGNAL(timeout()), this, SLOT(on_playButton_clicked()));
@@ -35,16 +40,20 @@ CellWindow::CellWindow(QWidget *parent) :
 
     // QGraphicsView is a container for a QGraphicsScene
     QGraphicsView * view = ui->graphicsView;
+    view2 = ui->graphicsView_2;
     view->setScene(scene);
     view->setSceneRect(0,0,view->frameSize().width(),view->frameSize().height());
-
+    view2->setScene(graph_scene);
+    view2->setSceneRect(0,0,view2->frameSize().width(),view2->frameSize().height());
 
     srand(time(0));
+    //view2->show();
 
     NewGame();
     //connect(ui->stepButton, &QAbstractButton::pressed, this, &CellWindow::on_playButton_clicked);
     //connect(ui->horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(setValue(int)));
     //connect(ui->horizontalSlider, SIGNAL)
+    UpdateGraph();
 }
 
 CellWindow::~CellWindow()
@@ -77,31 +86,38 @@ void CellWindow::NewGame() {
         cells_.push_back(cell_column);
     }
 
-    std::string s = "Population: " + std::to_string(population_);
+    std::string s = "Pop: " + std::to_string(population_) + "(" + std::to_string(population_/200) + ")";
+
     ui->populationLabel->setText(s.c_str());
+
+    std::string speed = "Speed: " + std::to_string(1);
+
+    ui->speedLabel->setText(speed.c_str());
+    scene->update();
 
 }
 
 void CellWindow::AddCell(Cell* c) {
     connect(c, &Cell::CellSelected, this, &CellWindow::CellClickedSlot);
     scene->addItem(c);
+
 }
 
 void CellWindow::on_stepButton_clicked(){
-    //SimulateTurn();
-    qDebug()<<"step button clicked";
+
+    //qDebug()<<"step button clicked";
     SimulateTurn();
 }
 
 void CellWindow::on_playButton_clicked(){
-    qDebug()<<"play button clicked";
+    //Debug()<<"play button clicked";
     time_->start(speed_);
     SimulateTurn();
     scene->update();
 
 }
 void CellWindow::on_pauseButton_clicked(){
-    qDebug()<<"pause button clicked";
+    //qDebug()<<"pause button clicked";
     time_->stop();
 }
 
@@ -121,7 +137,7 @@ void CellWindow::CellClickedSlot(Cell *c) {
 
     scene->update();
 
-    std::string s = "Population: " + std::to_string(population_);
+    std::string s = "Pop: " + std::to_string(population_)+ "(" + std::to_string(population_/200) + ")";
     ui->populationLabel->setText(s.c_str());
 
 }
@@ -176,14 +192,41 @@ void CellWindow::SimulateTurn(){
         }
     }
     population_ = accum;
+    if (pops_.size()>40){
+        pops_.erase(pops_.begin());
+    }
+    pops_.push_back(population_);
     qDebug()<< "pop: ";
     qDebug() <<population_ ;
+    double ratio =population_/200.0;
+    double rounded = (int)(ratio * 1000.0)/1000.0;
+    qDebug()<<"ratio";
+    qDebug()<<rounded;
+    std::string s = "Pop: " + std::to_string(population_)+ "(" + std::to_string(rounded) + ")";
+    ui->populationLabel->setText(s.c_str());
+
+    std::string turn = "Turn: " + std::to_string(turn_ct_);
+    ui->turnLabel->setText(turn.c_str());
+
     scene->update();
 
 
+    UpdateGraph();
+
     //this will call a function update graph
 }
+void CellWindow::UpdateGraph(){
+    graph_scene->clear();
+    for (int i = 0; i<pops_.size(); i++){
+        //qDebug()<<"pop size: ";
+        //qDebug()<<pops_[i];
+        QGraphicsRectItem* item3 = new QGraphicsRectItem((i+1)*10,85,10,-pops_[i]);
+        graph_scene->addItem(item3);
+    }
+    graph_scene->update();
+    view2->update();
 
+}
 
 int CellWindow::GetNeighbors(int row, int col) {
 
@@ -222,11 +265,15 @@ void CellWindow::on_horizontalSlider_actionTriggered(int action)
 
 void CellWindow::on_horizontalSlider_valueChanged(int value)
 {
-    speed_ = speed_/(value*.3);
+    speed_ = 1000-(value*4);
+
+    std::string speed = "Speed: " + std::to_string(1000-speed_);
+
+    ui->speedLabel->setText(speed.c_str());
     scene->update();
     qDebug()<<"in sliding";
     qDebug()<<speed_;
-}
+} //slider goes from 1-100
 
 void CellWindow::on_randomizeColorButton_clicked()
 {

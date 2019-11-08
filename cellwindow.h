@@ -63,22 +63,26 @@ private slots:
 
      void on_resetButton_clicked();
 
+     void UpdateGraph();
+
 private:
     Ui::CellWindow *ui;
 
     QGraphicsScene *scene;
-
+    QGraphicsScene *graph_scene;
    int population_;
 
    int turn_ct_;
 
    QTimer * time_;
-
+    QGraphicsView * view2;
    int speed_;
 
    std::vector<std::vector<Cell*>> cells_;
 
    int reproduction_requirement_;
+
+   std::vector<int> pops_;
 };
 
 #endif // CELLWINDOW_H
